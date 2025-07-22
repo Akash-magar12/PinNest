@@ -1,0 +1,7 @@
+# Global
+node_modules
+.env
+
+# Specific ignores
+client/.env
+server/.env

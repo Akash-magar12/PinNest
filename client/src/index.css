@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Poppins', sans-serif;
+}
+
+.swal2-custom-font {
+  font-size: 16px;
+}
+
+.swal2-custom-title {
+  font-size: 30px;
+}
+
+.swal2-custom-button {
+  font-size: 16px !important;
+  padding: 6px 12px;
+}
+/* Add this to your globals.css or equivalent CSS file */
+.my-masonry-grid {
+  display: flex;
+  margin-left: -24px; /* gutter size offset */
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 24px; /* gutter size */
+  background-clip: padding-box;
+}
+
+/* Style your items */
+.my-masonry-grid_column > div {
+  /* change div to reference your element you're using as a column item */
+  /* background: grey; */
+  margin-bottom: 24px;
+}
