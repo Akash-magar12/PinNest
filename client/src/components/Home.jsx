@@ -15,7 +15,7 @@ const Home = () => {
     if (user) return;
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/user/me`,
+        `${BASE_URL}/user/me`,
         { withCredentials: true }
       );
       dispatch(addUser(response.data));
