@@ -1,5 +1,3 @@
-"use client"
-
 import axios from "axios"
 import { useState } from "react"
 import { BASE_URL } from "../utils/const" // Assuming BASE_URL is defined elsewhere or passed via context/env

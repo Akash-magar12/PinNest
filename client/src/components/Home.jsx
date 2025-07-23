@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../reducers/userSlice";
 import { Outlet, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/const";
 
 const Home = () => {
   const user = useSelector((store) => store.user);
@@ -14,7 +15,7 @@ const Home = () => {
     if (user) return;
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/user/me`,
+        `${BASE_URL}/api/user/me`,
         { withCredentials: true }
       );
       dispatch(addUser(response.data));
