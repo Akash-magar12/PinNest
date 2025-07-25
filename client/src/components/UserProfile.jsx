@@ -1,83 +1,99 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { Link, useParams } from "react-router-dom"
-import { BASE_URL } from "../utils/const"
-import toast from "react-hot-toast" // Assuming react-hot-toast is installed
-import SavedPins from "./SavedPins" // Will create/modify this
-import UserAllPins from "./UserAllPins" // Will create/modify this
-import { Edit3, UserPlus, Mail, Users, UserCheck } from "lucide-react"
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/const";
+import toast from "react-hot-toast";
+import SavedPins from "./SavedPins";
+import UserAllPins from "./UserAllPins";
+import {
+  Edit3,
+  UserPlus,
+  Mail,
+  Users,
+  UserCheck,
+  ArrowLeft,
+} from "lucide-react";
 
 const UserProfile = () => {
-  const { id } = useParams()
-  const loggedInUser = useSelector((store) => store.user) // Assuming store.user exists
-  const [profileUser, setProfileUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState("created")
-  const isOwnProfile = !id || id === loggedInUser?._id
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const loggedInUser = useSelector((store) => store.user);
+  const [profileUser, setProfileUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("created");
+  const isOwnProfile = !id || id === loggedInUser?._id;
 
-  // ✅ Fetch profile user data
   const fetchProfile = async () => {
-    const endPoint = id ? `${BASE_URL}/user/user-profile/${id}` : `${BASE_URL}/user/me`
+    const endPoint = id
+      ? `${BASE_URL}/user/user-profile/${id}`
+      : `${BASE_URL}/user/me`;
     try {
-      setLoading(true)
-      const response = await axios.get(endPoint, { withCredentials: true })
-      setProfileUser(response.data)
+      setLoading(true);
+      const response = await axios.get(endPoint, { withCredentials: true });
+      setProfileUser(response.data);
     } catch (error) {
-      console.error("Error fetching profile:", error)
-      toast.error("Failed to load profile")
+      console.error("Error fetching profile:", error);
+      toast.error("Failed to load profile");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  // ✅ Handle Follow/Unfollow
   const handleFollow = async (userId) => {
-    console.log("Follow clicked")
     try {
-      const response = await axios.post(`${BASE_URL}/user/follow/${userId}`, {}, { withCredentials: true })
-      toast.success(response.data.message)
-      await fetchProfile() // 🔄 Refresh profile data
+      const response = await axios.post(
+        `${BASE_URL}/user/follow/${userId}`,
+        {},
+        { withCredentials: true }
+      );
+      toast.success(response.data.message);
+      await fetchProfile();
     } catch (error) {
-      console.error("Follow error:", error.response || error.message)
-      toast.error("Failed to follow/unfollow user")
+      console.error("Follow error:", error.response || error.message);
+      toast.error("Failed to follow/unfollow user");
     }
-  }
+  };
 
   useEffect(() => {
-    fetchProfile()
-  }, [id])
+    fetchProfile();
+  }, [id]);
 
   if (loading) {
-    // ⏳ Show loading skeleton (unchanged)
     return (
       <div className="min-h-screen bg-[whitesmoke] flex items-center justify-center">
-        <p className="text-gray-500">Loading profile...</p>
-        {/* You can replace this with a more elaborate skeleton UI */}
+        <p className="text-gray-500 text-sm sm:text-base">Loading profile...</p>
       </div>
-    )
+    );
   }
 
-  // ✅ Determine follow status from current profile data
-  const isFollowing = profileUser?.followers?.includes(loggedInUser?._id)
+  const isFollowing = profileUser?.followers?.includes(loggedInUser?._id);
 
   return (
     <div className="min-h-screen bg-[whitesmoke]">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8 hover:shadow-md transition-shadow duration-300">
+      <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
+        <div className="flex items-center justify-between">
+          <span
+            onClick={() => navigate(-1)}
+            className="p-2 hover:bg-gray-100 cursor-pointer rounded-full transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 text-gray-700" />
+          </span>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-6 sm:mb-8 hover:shadow-md transition-shadow duration-300">
           <div className="flex flex-col items-center text-center">
-            {/* Profile image and name */}
-            <div className="mb-6">
+            <div className="mb-5 sm:mb-6">
               {profileUser?.profileImage ? (
                 <img
-                  src={profileUser?.profileImage?.url || "/placeholder.svg?height=128&width=128&query=user profile"}
+                  src={profileUser?.profileImage?.url || "/placeholder.svg"}
                   alt={`${profileUser?.name}'s profile`}
-                  className="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow-sm"
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100 shadow-sm"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full bg-gray-800 flex items-center justify-center border-4 border-gray-100 shadow-sm">
-                  <span className="text-white text-3xl font-semibold">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-800 flex items-center justify-center border-4 border-gray-100 shadow-sm">
+                  <span className="text-white text-2xl sm:text-3xl font-semibold">
                     {profileUser?.name
                       ?.split(" ")
                       .map((word) => word[0])
@@ -88,41 +104,54 @@ const UserProfile = () => {
                 </div>
               )}
             </div>
-            <h1 className="text-3xl font-bold text-black mb-3">{profileUser?.name}</h1>
-            {profileUser?.bio && <p className="text-gray-700 mb-4 max-w-md">{profileUser?.bio}</p>}
+
+            <h1 className="text-2xl sm:text-3xl capitalize font-bold text-black mb-2 sm:mb-3">
+              {profileUser?.name}
+            </h1>
+
+            {profileUser?.bio && (
+              <p className="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4 max-w-md">
+                {profileUser?.bio}
+              </p>
+            )}
+
             {profileUser?.email && (
-              <div className="flex items-center justify-center gap-2 text-gray-600 mb-8">
+              <div className="flex items-center justify-center gap-2 text-gray-600 text-xs sm:text-sm mb-6">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">{profileUser.email}</span>
+                <span>{profileUser.email}</span>
               </div>
             )}
-            {/* Follower/Following counts */}
-            <div className="flex gap-8 mb-8">
+
+            <div className="flex flex-wrap justify-center gap-6 mb-6">
               <Link
                 to={`/home/relations/${profileUser?._id}/followers`}
-                className="text-center hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200"
+                className="text-center"
               >
-                <div className="text-2xl font-bold text-black mb-1">{profileUser?.followers?.length || 0}</div>
-                <div className="text-sm text-gray-600 flex items-center gap-1">
+                <div className="text-lg sm:text-2xl font-bold text-black">
+                  {profileUser?.followers?.length || 0}
+                </div>
+                <div className="text-sm text-gray-600 flex items-center gap-1 justify-center">
                   <Users className="w-4 h-4" />
                   Followers
                 </div>
               </Link>
               <Link
                 to={`/home/relations/${profileUser?._id}/following`}
-                className="text-center hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200"
+                className="text-center"
               >
-                <div className="text-2xl font-bold text-black mb-1">{profileUser?.following?.length || 0}</div>
-                <div className="text-sm text-gray-600 flex items-center gap-1">
+                <div className="text-lg sm:text-2xl font-bold text-black">
+                  {profileUser?.following?.length || 0}
+                </div>
+                <div className="text-sm text-gray-600 flex items-center gap-1 justify-center">
                   <UserCheck className="w-4 h-4" />
                   Following
                 </div>
               </Link>
             </div>
-            {/* ✅ Follow / Edit Profile button */}
+
             {isOwnProfile ? (
               <Link to="/home/edit-profile">
-                <button className="bg-black cursor-pointer text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-gray-800 flex items-center gap-2">
+                <button className="bg-black cursor-pointer text-white px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-medium hover:bg-gray-800 flex items-center gap-2">
                   <Edit3 className="w-4 h-4" />
                   Edit Profile
                 </button>
@@ -131,7 +160,7 @@ const UserProfile = () => {
               <button
                 type="button"
                 onClick={() => handleFollow(profileUser._id)}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                className={`px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-medium flex items-center gap-2 ${
                   isFollowing
                     ? "bg-gray-100 text-black border-2 border-gray-300 hover:bg-gray-200"
                     : "bg-black text-white hover:bg-gray-800"
@@ -143,22 +172,26 @@ const UserProfile = () => {
             )}
           </div>
         </div>
-        {/* Created/Saved Pins tabs (only for own profile) */}
+
         {isOwnProfile && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mb-8 overflow-hidden">
-            <div className="flex">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 sm:mb-8 overflow-hidden">
+            <div className="flex flex-col sm:flex-row">
               <button
                 onClick={() => setActiveTab("created")}
-                className={`flex-1 py-4 px-6 font-medium cursor-pointer transition-all duration-200 ${
-                  activeTab === "created" ? "bg-black text-white" : "text-gray-600 hover:text-black hover:bg-gray-50"
+                className={`flex-1 py-3 sm:py-4 px-4 cursor-pointer sm:px-6 font-medium ${
+                  activeTab === "created"
+                    ? "bg-black text-white"
+                    : "text-gray-600 hover:text-black hover:bg-gray-50"
                 }`}
               >
                 Created Pins
               </button>
               <button
                 onClick={() => setActiveTab("saved")}
-                className={`flex-1 py-4 px-6 font-medium cursor-pointer transition-all duration-200 ${
-                  activeTab === "saved" ? "bg-black text-white" : "text-gray-600 hover:text-black hover:bg-gray-50"
+                className={`flex-1 py-3 sm:py-4 px-4 cursor-pointer sm:px-6 font-medium ${
+                  activeTab === "saved"
+                    ? "bg-black text-white"
+                    : "text-gray-600 hover:text-black hover:bg-gray-50"
                 }`}
               >
                 Saved Pins
@@ -166,15 +199,18 @@ const UserProfile = () => {
             </div>
           </div>
         )}
-        {/* Render Pins */}
+
         {!isOwnProfile || activeTab === "created" ? (
-          <UserAllPins userId={id || loggedInUser?._id} isOwnProfile={isOwnProfile} />
+          <UserAllPins
+            userId={id || loggedInUser?._id}
+            isOwnProfile={isOwnProfile}
+          />
         ) : (
           <SavedPins userId={id || loggedInUser?._id} />
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserProfile
+export default UserProfile;

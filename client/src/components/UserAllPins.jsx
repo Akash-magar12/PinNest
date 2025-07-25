@@ -1,3 +1,4 @@
+import Masonry from "react-masonry-css";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/const";
 import { useEffect, useState } from "react";
@@ -45,19 +46,23 @@ const UserAllPins = ({ userId, isOwnProfile }) => {
 
   useEffect(() => {
     if (userId) fetchUserPins();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
+
+  const breakpointColumnsObj = {
+    default: 4,
+    1100: 3,
+    700: 2,
+    500: 1,
+  };
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+      <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {Array.from({ length: 8 }).map((_, index) => (
           <div
             key={index}
-            className="bg-zinc-300  rounded-xl animate-pulse aspect-[4/5]"
-          >
-            <div className="w-full h-full bg-gray-200"></div>
-          </div>
+            className="bg-zinc-300 rounded-xl animate-pulse aspect-[4/5] h-60"
+          ></div>
         ))}
       </div>
     );
@@ -84,42 +89,47 @@ const UserAllPins = ({ userId, isOwnProfile }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
-      {userAllPins.map((pin) => (
-        <div
-          key={pin._id}
-          className="bg-white border border-black/10 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col"
-        >
-          <Link to={`/home/single/${pin._id}`} className="block w-full">
-            <div className="aspect-[5/4] overflow-hidden rounded-t-xl">
+    <div className="mt-8">
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="flex gap-4"
+        columnClassName="flex flex-col gap-4"
+      >
+        {userAllPins.map((pin) => (
+          <div
+            key={pin._id}
+            className="group relative bg-white border border-black/10 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <Link to={`/home/single/${pin._id}`} className="block">
               <img
                 src={pin?.image?.url || "/placeholder.svg"}
                 alt={pin?.title}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                className="w-full object-cover"
               />
-            </div>
-          </Link>
+            </Link>
 
-          <div className="px-4 py-3 flex-1 flex flex-col justify-between">
+            {/* Delete button overlay on hover */}
             {isOwnProfile && (
-              <button
-                onClick={() => handleDeleteButton(pin._id)}
-                disabled={deletingId === pin._id}
-                className="mt-auto bg-red-500 text-white w-full py-2 rounded-md hover:bg-red-600 transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {deletingId === pin._id ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <Trash2 className="w-4 h-4" />
-                    Delete
-                  </>
-                )}
-              </button>
+              <div className="absolute top-2 right-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-in-out z-10">
+                <button
+                  onClick={() => handleDeleteButton(pin._id)}
+                  disabled={deletingId === pin._id}
+                  className="bg-white/90 hover:bg-white text-red-600 border border-red-300 px-3 py-1 text-sm rounded-md flex items-center gap-2 shadow"
+                >
+                  {deletingId === pin._id ? (
+                    <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </>
+                  )}
+                </button>
+              </div>
             )}
           </div>
-        </div>
-      ))}
+        ))}
+      </Masonry>
     </div>
   );
 };

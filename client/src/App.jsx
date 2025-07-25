@@ -45,10 +45,7 @@ const App = () => {
           index: true,
           element: <MansoryGallery />,
         },
-        {
-          path: "profile",
-          element: <UserProfile />,
-        },
+
         {
           path: "profile/:id?",
           element: <UserProfile />,

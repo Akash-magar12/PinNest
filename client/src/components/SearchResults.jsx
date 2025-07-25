@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { BASE_URL } from "../utils/const"; // Corrected relative path for plain React setup
 import { useEffect, useState } from "react";
 import Masonry from "react-masonry-css"; // Import react-masonry-css
@@ -57,7 +57,8 @@ const SearchResults = () => {
           columnClassName="my-masonry-grid_column pl-6 bg-clip-padding" // padding for gutter
         >
           {searchResults.map((post) => (
-            <div
+            <Link
+              to={`/home/single/${post._id}`}
               key={post._id}
               className="mb-6 bg-white border border-black/10 rounded-lg cursor-pointer transition-all duration-300 group overflow-hidden hover:shadow-lg hover:shadow-black/10 hover:border-black/20 hover:-translate-y-1"
             >
@@ -73,7 +74,7 @@ const SearchResults = () => {
                   loading="lazy"
                 />
               </div>
-            </div>
+            </Link>
           ))}
         </Masonry>
       )}

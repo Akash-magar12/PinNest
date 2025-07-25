@@ -94,13 +94,6 @@ const MansoryGallery = () => {
             ))}
           </Masonry>
         )}
-
-        {/* Footer */}
-        <div className="text-center py-16 mt-20 border-t border-black/10">
-          <p className="text-black/40 text-sm uppercase tracking-widest">
-            SnapNest Gallery • Powered by Cloudinary
-          </p>
-        </div>
       </div>
     </div>
   );
