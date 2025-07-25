@@ -12,9 +12,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    // origin: "https://pin-nest.vercel.app",
-    origin: "http://localhost:5173", 
-     // Your React app's origin
+    origin: "https://pin-nest.vercel.app",
+    // origin: "http://localhost:5173",
     credentials: true, // Allow cookies
   })
 );
