@@ -1,78 +1,84 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import axios from "axios"
-import { BASE_URL } from "../utils/const"
-import toast from "react-hot-toast"
-import { addUser } from "../reducers/userSlice"
-import { Camera, User, FileText, Save, X } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../utils/const";
+import toast from "react-hot-toast";
+import { addUser } from "../reducers/userSlice";
+import { Camera, User, FileText, Save, X } from "lucide-react";
 
 const EditProfile = () => {
-  const user = useSelector((store) => store.user)
-  const [file, setFile] = useState(null)
+  const user = useSelector((store) => store.user);
+  const [file, setFile] = useState(null);
   const [data, setData] = useState({
     name: "",
     bio: "",
-  })
-  const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  });
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       setData({
         name: user.name || "",
         bio: user.bio || "",
-      })
+      });
     }
-  }, [user])
+  }, [user]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const formData = new FormData()
-      formData.append("name", data.name)
-      formData.append("bio", data.bio)
-      if (file) formData.append("profileImage", file)
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("bio", data.bio);
+      if (file) formData.append("profileImage", file);
 
       const res = await axios.put(`${BASE_URL}/user/edit-profile/`, formData, {
         withCredentials: true,
-      })
+      });
 
-      toast.success(res.data.message)
-      dispatch(addUser(res.data.user))
-      setTimeout(() => navigate("/home/profile"), 1000)
+      toast.success(res.data.message);
+      dispatch(addUser(res.data.user));
+      setTimeout(() => navigate("/home/profile"), 1000);
     } catch (error) {
-      console.error("❌ Error:", error)
-      toast.error("Failed to update profile")
+      console.error("❌ Error:", error);
+      toast.error("Failed to update profile");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    navigate("/home/profile")
-  }
+    navigate("/home/profile");
+  };
 
   return (
     <div className="min-h-screen bg-[whitesmoke] py-6 px-4 sm:py-8 sm:px-6">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-black mb-2">Edit Profile</h1>
-          <p className="text-gray-600 text-sm sm:text-base">Update your profile information</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-black mb-2">
+            Edit Profile
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base">
+            Update your profile information
+          </p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-          <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6 sm:space-y-8">
+          <form
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+            className="space-y-6 sm:space-y-8"
+          >
             <div className="flex flex-col items-center space-y-4">
               <div className="relative group">
                 <div className="relative">
@@ -82,7 +88,8 @@ const EditProfile = () => {
                       src={
                         file
                           ? URL.createObjectURL(file)
-                          : user?.profileImage?.url || "/placeholder.svg?height=128&width=128"
+                          : user?.profileImage?.url ||
+                            "/placeholder.svg?height=128&width=128"
                       }
                       alt="Profile Preview"
                     />
@@ -151,7 +158,9 @@ const EditProfile = () => {
                   placeholder="Tell us about yourself..."
                   className="w-full px-4 py-2 sm:py-3 border border-gray-300 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent resize-none transition-all duration-200"
                 ></textarea>
-                <p className="text-sm text-gray-500 mt-1">{data.bio.length}/200 characters</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {data.bio.length}/200 characters
+                </p>
               </div>
             </div>
 
@@ -186,11 +195,13 @@ const EditProfile = () => {
         </div>
 
         <div className="text-center mt-6">
-          <p className="text-sm text-gray-500">Your profile information will be visible to other users</p>
+          <p className="text-sm text-gray-500">
+            Your profile information will be visible to other users
+          </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EditProfile
+export default EditProfile;
