@@ -110,7 +110,7 @@ const PinForm = ({
           <button
             type="submit"
             disabled={loading}
-            className={`w-full font-bold py-4 px-6 rounded-xl text-lg transition-colors duration-200 ${
+            className={`w-full font-bold py-4 cursor-pointer px-6 rounded-xl text-lg transition-colors duration-200 ${
               loading
                 ? "bg-gray-400 cursor-not-allowed text-white"
                 : "bg-black text-white hover:bg-neutral-800"

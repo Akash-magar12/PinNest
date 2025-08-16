@@ -191,7 +191,7 @@ const Navbar = () => {
                     <span>Settings</span>
                   </Link>
                   <hr className="my-2 border-gray-200" />
-                  <button onClick={handleLogut} className="flex items-center space-x-3 px-4 py-2 sm:py-3 text-red-600 hover:bg-gray-100 hover:text-red-700 transition-colors duration-200 text-sm sm:text-base w-full text-left">
+                  <button onClick={handleLogut} className="flex items-center space-x-3 px-4 py-2 sm:py-3 text-red-600 hover:bg-gray-100 hover:text-red-700 transition-colors cursor-pointer duration-200 text-sm sm:text-base w-full text-left">
                     <LogOut className="w-4 h-4" />
                     <span>Logout</span>
                   </button>

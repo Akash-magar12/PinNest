@@ -9,6 +9,8 @@ import { BASE_URL } from "../utils/const";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [confirmShowPassword, setConfirmShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [formData, setFormData] = useState({
@@ -38,6 +40,7 @@ const Signup = () => {
 
     if (!isChecked)
       return toast.error("Please agree to the Terms & Conditions");
+    setLoading(true);
 
     try {
       let response = await axios.post(`${BASE_URL}/auth/signup`, formData, {
@@ -53,6 +56,8 @@ const Signup = () => {
     } catch (error) {
       const msg = error.response?.data?.message || "Something went wrong.";
       toast.error(msg, { duration: 1000 });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -196,9 +201,10 @@ const Signup = () => {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full bg-black cursor-pointer text-white py-3 rounded-xl font-semibold hover:bg-gray-900 transform hover:scale-[1.02] transition-all duration-200 shadow-md"
+                  disabled={loading}
+                  className="w-full bg-black cursor-pointer text-white py-3 rounded-xl font-semibold hover:bg-gray-900 transform hover:scale-[1.02] transition-all duration-200 shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Create Account
+                  {loading ? "Creating..." : "Create Account"}
                 </button>
 
                 {/* Switch to Login */}

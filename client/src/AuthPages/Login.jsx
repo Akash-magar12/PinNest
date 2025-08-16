@@ -9,6 +9,7 @@ import { BASE_URL } from "../utils/const";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showModal, setShowModal] = useState(false);
   const [, setSelectedOption] = useState(null);
@@ -27,6 +28,8 @@ const Login = () => {
     if (!email || !password) {
       return toast.error("Please fill in all the required fields.");
     }
+    setLoading(true);
+
     try {
       const response = await axios.post(`${BASE_URL}/auth/login`, formData, {
         withCredentials: true,
@@ -41,6 +44,8 @@ const Login = () => {
         error.response?.data?.message ||
         "Something went wrong. Please try again.";
       toast.error(errorMessage, { duration: 1000 });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -145,8 +150,11 @@ const Login = () => {
                 </div>
 
                 {/* Submit */}
-                <button className="w-full cursor-pointer bg-black text-white py-3 px-4 rounded-xl font-semibold hover:bg-gray-900 transform hover:scale-[1.02] transition-all duration-200 shadow-md">
-                  Sign In
+                <button
+                  disabled={loading}
+                  className="w-full cursor-pointer bg-black text-white py-3 px-4 rounded-xl font-semibold hover:bg-gray-900 transform hover:scale-[1.02] transition-all duration-200 shadow-md"
+                >
+                  {loading ? "Signing..." : "Sign In"}
                 </button>
 
                 {/* Redirect */}

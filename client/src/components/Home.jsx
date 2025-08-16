@@ -7,6 +7,7 @@ import { addUser } from "../reducers/userSlice";
 import { Outlet, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/const";
 import ScrollToTop from "./ScrollToTop";
+import Footer from "./Footer";
 
 const Home = () => {
   const user = useSelector((store) => store.user);
@@ -35,6 +36,7 @@ const Home = () => {
       <ScrollToTop />
       <Navbar />
       <Outlet />
+      <Footer />
     </div>
   );
 };
