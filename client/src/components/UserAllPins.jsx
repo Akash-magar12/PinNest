@@ -46,6 +46,7 @@ const UserAllPins = ({ userId, isOwnProfile }) => {
 
   useEffect(() => {
     if (userId) fetchUserPins();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const breakpointColumnsObj = {
