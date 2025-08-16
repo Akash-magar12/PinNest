@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 import crypto from "crypto";
 import transporter from "../utils/mailer.js";
-import nodemailer from "nodemailer";
 // Signup Controller
 export const authSignup = async (req, res) => {
   try {
